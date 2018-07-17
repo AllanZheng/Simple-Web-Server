@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js" src="jquery.js"></script>
+    <script type="text/javascript">
+                
+            
+        //read();
+        $(document).ready(function(){
+  $("#btn1").click(function(){
+    $('#test').load('/example/jquery/demo_test.txt');
+  })
+/*   
+function read(){
+
+  $.ajax({
+     type:'post',
+     url:'/search',
+     data:{
+     "res": entity.Info
+     },
+     dataType:'json',
+     success:function(data){
+         alert(data)
+        console.log('读取的结果')
+        console.log(data)
+        if(data.success){
+          $("res").html(data.content);
+        }else{
+          alert("读取内容失败");
+        }
+        
+     }
+  })
+  
+}
+*/
+</script>
+</head>
+<body>
+    <text>Successful!</text>
+    <div id="pagination" class="pagination"></div>
+  
+    <form action="/login" method="GET">
+    Create:<br>
+    <input type = "submit" value="Goback">
+    </form>
+    <form action="/search" method="GET">
+        Search:<br>
+        <input type = "submit" value="Goback">
+    </form>
+    <form action="/update" method="GET">
+        Update:<br>
+        <input type = "submit" value="Goback">
+    </form>
+    <form action="/delete" method="GET">
+        Delete:<br>
+        <input type = "submit" value="Goback">
+    </form>
+</body>
+</html>
