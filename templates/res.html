@@ -5,62 +5,68 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Page Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script src="main.js" src="jquery.js"></script>
-    <script type="text/javascript">
-                
-            
-        //read();
-        $(document).ready(function(){
-  $("#btn1").click(function(){
-    $('#test').load('/example/jquery/demo_test.txt');
-  })
-/*   
-function read(){
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
 
-  $.ajax({
-     type:'post',
-     url:'/search',
-     data:{
-     "res": entity.Info
-     },
-     dataType:'json',
-     success:function(data){
-         alert(data)
-        console.log('读取的结果')
-        console.log(data)
-        if(data.success){
-          $("res").html(data.content);
-        }else{
-          alert("读取内容失败");
-        }
-        
-     }
-  })
-  
-}
-*/
-</script>
+    </script>
+
 </head>
 <body>
-    <text>Successful!</text>
-    <div id="pagination" class="pagination"></div>
-  
-    <form action="/login" method="GET">
-    Create:<br>
-    <input type = "submit" value="Goback">
-    </form>
-    <form action="/search" method="GET">
-        Search:<br>
-        <input type = "submit" value="Goback">
-    </form>
-    <form action="/update" method="GET">
-        Update:<br>
-        <input type = "submit" value="Goback">
-    </form>
-    <form action="/delete" method="GET">
-        Delete:<br>
-        <input type = "submit" value="Goback">
-    </form>
+        <div class = "container">
+                <div class="page-header">
+                        <h1>SimpleSystem
+
+                        </h1>
+                    </div>
+                  
+     <nav class="nav nav-pills" role="navigation">
+            <div class="container-fluid">
+            <div class="navbar-header">
+                    <form action = "/index"  method="GET">
+                        <button type =submit class="btn btn-default">Home</button>
+                     </form></li>
+            </div>
+            <div>
+                <ul class="nav navbar-nav">
+                <li class="active">
+                    <div class="btn-group">
+                          
+                    <form action = "/login"  method="GET">
+                       <button type =submit class="btn btn-default">Create</button>
+                    </form></li>
+                    <li><form action = "/search"  method="GET">
+                        <button type =submit class="btn btn-default">Search</button>
+                       </form></li>
+                       <li><form action = "/update"  method="GET">
+                        <button type =submit class="btn btn-default">Update</button>
+                       </form></li>
+                        <li><form action = "/delete"  method="GET">
+                        <button type =submit class="btn btn-default">Delete</button>
+                     </form></li>
+                    </div>
+                </ul>
+            </div>
+            
+        </nav>
+        <h2>Sucessful!</h2>
+        <table class="table">
+                <caption>RESULT</caption>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>{{.Name}}</th>
+                    <th>{{.ID}}</th>
+                </tr>
+                </tbody>
+            </table>
+        <h5>{{.Result}}</h5>
+    </div>
 </body>
 </html>

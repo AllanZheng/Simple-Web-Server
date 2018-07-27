@@ -1,114 +1,78 @@
 package main
 import(
-	"fmt"
+
 	"github.com/gin-gonic/gin"
-	"github/SimpleWeb/entity"
-	"github/SimpleWeb/util"
-	"net/http"
+	"github/SimpleWeb/service"
 	"flag"
+	"fmt"
+	"net/http"
 )
 func main(){
-
+	
 	flag.Parse()//
 	gin.SetMode(gin.DebugMode) //全局设置环境，此为开发环境，线上环境为gin.ReleaseMode
-    router := gin.Default()    //获得路由实例
-    
-    //添加中间件
-    //router.Use(Middleware)
-    //注册接口
-    
-	router.LoadHTMLGlob("templates/*")
-	//测试
-
-	router.GET("/login",func(c *gin.Context){
-		c.HTML(http.StatusOK,"index.html",gin.H{
-		})
-	})
-	router.GET("/update",func(c *gin.Context){
-		c.HTML(http.StatusOK,"update.html",gin.H{
-		})
-	})
-	router.GET("/search",func(c *gin.Context){
-		c.HTML(http.StatusOK,"search.html",gin.H{
-		})
-	})
-	router.GET("/delete",func(c *gin.Context){
-		c.HTML(http.StatusOK,"delete.html",gin.H{
-		})
-	})
-	router.POST("/login",func(c *gin.Context){
-		var e entity.Info
-		var err error
-		e.Name = c.PostForm("Name")
-		//e.ID = c.PostForm("ID")
-		fmt.Println(e.Name)
-	   
-		if err = util.CreateForm(&e);err!=nil{
-		c.HTML(http.StatusOK,"fail.html",gin.H{
-		"Error Info!" : err,
-		})
-		}else{
-			fmt.Println("Sucessful!")
-			c.HTML(http.StatusOK,"res.html",gin.H{
-		
-				})
-		}
-		
-	})
-	router.POST("/delete",func(c *gin.Context){
-		var e entity.Info
-		var err error
-		e.Name = c.PostForm("Name")
-		//e.ID = c.PostForm("ID")
-		fmt.Println(e.Name)
-
-		if err = util.DeleteForm(&e);err!=nil{
-		c.HTML(http.StatusOK,"fail.html",gin.H{
-		"Error Info!" : err,
-		})
-		}else{
-			c.HTML(http.StatusOK,"res.html",gin.H{})
-			fmt.Println(" Delete Sucessful!")
-		}
-		
-	})
-	router.POST("/update",func(c *gin.Context){
-		var e entity.Info
-		var ne entity.Info
-		var err error
-		e.Name = c.PostForm("Name")
-		ne.Name = c.PostForm("NewName")
-		fmt.Println(e.Name)
-        fmt.Println(ne.Name)
-		if err = util.UpdateForm(&e,&ne);err!=nil{
-		c.HTML(http.StatusOK,"fail.html",gin.H{
-		"Error Info!" : err,
-		})
-		}else{
-			c.HTML(http.StatusOK,"res.html",gin.H{})
-			fmt.Println(" Update Sucessful!")
-		}
-		
-	})
-	router.POST("/search",func(c *gin.Context){
-		var e entity.Info
-		var err error
-		e.Name = c.PostForm("Name")
-		//e.ID = c.PostForm("ID")
-		fmt.Println(e.Name)
-        var res entity.Info
-		if err,res = util.FindForm(&e);err!=nil{
-		c.HTML(http.StatusOK,"fail.html",gin.H{
-		"Error Info!" : err,
-		})
-		}else{
-			c.HTML(http.StatusOK,"res.html",gin.H{
-				"res": res,
-			})
-			fmt.Println(" Find Sucessful!")
-		}
-		
-	})
+	router := ginReady()   //获得路由实例
 	router.Run(":8080")
-	fmt.Println("Server Start!")
+
 }
+func ginReady() *gin.Engine{
+    router := gin.New()
+	//router.use(middleware.Auth())
+	router.LoadHTMLGlob("templates/*")
+    router.GET("/login", service.LoginForm)
+    router.POST("/login", service.PostLoginForm)
+	router.GET("/logout", service.Logout)
+	r := router.Group("/service")
+	r.Use(Auth())
+	{
+		r.GET("/", service.HomePage)
+		r.GET("/createdep",service.CreateDep)
+		r.GET("/updatedep",service.UpdateDep)
+		r.GET("/deletedep",service.DeleteDep)
+		r.GET("/searchdep",service.SearchDep)
+		r.GET("/searchall",service.SearchAll)
+	/*
+		router.POST("/createuser",CreateUser)
+		router.POST("/updateuser",updateUser)
+		router.POST("/deleteuser",deleteUser)
+		router.POST("/searchdep",searchUser)
+	*/
+	}
+
+	fmt.Println("Server Start!")
+	return router
+}
+/*
+var sercets = gin.H{
+	"admin": gin.H{"email":"amdin@example.com"},
+}
+*/
+func Auth() gin.HandlerFunc{
+	return func(c *gin.Context){
+	username := c.Query("username")
+	password := c.Query("password")
+	fmt.Println("Middleware Using!")
+	/*
+	user := c.MustGet(gin.AuthUserKey).(string)
+	authorized := r.Group("/",gin.BasicAuth(gin.Accounts{
+		"admin":"12345",
+	}))
+	*/
+	if username == "admin" && password =="12345" {
+        c.JSON(http.StatusOK,gin.H{
+            "message" : "Authorized!",
+		})
+		c.Next()
+	}else{
+	
+		c.Abort()
+	    c.HTML(
+		http.StatusUnauthorized,"fail.html",gin.H{
+			"message": "Authorized Failed!",
+		})
+
+	}
+}
+
+}
+
